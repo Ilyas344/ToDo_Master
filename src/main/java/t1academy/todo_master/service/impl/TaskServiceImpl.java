@@ -6,16 +6,17 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import t1academy.todo_master.dto.input.AllUpdateTaskDto;
 import t1academy.todo_master.dto.input.CreateTaskDto;
+import t1academy.todo_master.dto.input.UpdateAllTaskDto;
 import t1academy.todo_master.dto.input.UpdateTaskDto;
+import t1academy.todo_master.dto.output.GetAllTaskResult;
+import t1academy.todo_master.dto.output.GetTaskResult;
+import t1academy.todo_master.dto.output.TaskResponse;
 import t1academy.todo_master.exception.TaskNotFoundException;
 import t1academy.todo_master.mapper.TaskMapper;
 import t1academy.todo_master.model.Task;
 import t1academy.todo_master.repository.TaskRepository;
 import t1academy.todo_master.service.TaskService;
-
-import java.util.List;
 
 
 @Service
@@ -26,31 +27,28 @@ public class TaskServiceImpl implements TaskService {
     private final TaskMapper taskMapper;
 
     @Override
-    public Task createTask(CreateTaskDto task) {
-
-        return taskRepository.save(taskMapper.toEntity(task));
+    public TaskResponse createTask(CreateTaskDto taskDto) {
+        Task task = taskRepository.save(taskMapper.toEntity(taskDto));
+        return new TaskResponse(task);
     }
 
     @Override
-    public Task getTask(Long taskId) {
-        return taskRepository
-                .findById(taskId)
-                .orElseThrow(() ->
-                        new TaskNotFoundException("Task not found with id: " + taskId));
+    public GetTaskResult getTask(Long taskId) {
+        return new GetTaskResult(getTaskById(taskId));
     }
 
     @Override
-    public Task updateTask(Long id, UpdateTaskDto task) {
-        Task oldTask = getTask(id);
+    public TaskResponse updateTask(Long id, UpdateTaskDto task) {
+        Task oldTask = getTaskById(id);
         taskMapper.partialUpdate(task, oldTask);
-        return taskRepository.save(oldTask);
+        return new TaskResponse(taskRepository.save(oldTask));
     }
 
     @Override
-    public Task allUpdateTask(Long id, AllUpdateTaskDto task) {
-        Task oldTask = getTask(id);
+    public TaskResponse updateAllTask(Long id, UpdateAllTaskDto task) {
+        Task oldTask = getTaskById(id);
         BeanUtils.copyProperties(task, oldTask);
-        return taskRepository.save(oldTask);
+        return new TaskResponse(taskRepository.save(oldTask));
     }
 
 
@@ -60,12 +58,17 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+    public GetAllTaskResult getAllTasks() {
+        return new GetAllTaskResult(taskRepository.findAll());
     }
 
     @Override
     public Page<Task> getAllTasks(Pageable pageable) {
         return taskRepository.findAll(pageable);
+    }
+
+    private Task getTaskById(Long taskId) {
+        return taskRepository.findById(taskId).orElseThrow(() ->
+                new TaskNotFoundException("Task not found with id: " + taskId));
     }
 }

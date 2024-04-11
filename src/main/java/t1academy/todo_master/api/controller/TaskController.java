@@ -8,14 +8,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import t1academy.todo_master.api.TaskApi;
-import t1academy.todo_master.dto.input.AllUpdateTaskDto;
 import t1academy.todo_master.dto.input.CreateTaskDto;
+import t1academy.todo_master.dto.input.UpdateAllTaskDto;
 import t1academy.todo_master.dto.input.UpdateTaskDto;
+import t1academy.todo_master.dto.output.GetAllTaskResult;
+import t1academy.todo_master.dto.output.GetTaskResult;
+import t1academy.todo_master.dto.output.TaskResponse;
 import t1academy.todo_master.model.Task;
 import t1academy.todo_master.service.TaskService;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class TaskController implements TaskApi {
     private final TaskService taskService;
 
     @Override
-    public ResponseEntity<List<Task>> getAllTasks() {
+    public ResponseEntity<GetAllTaskResult> getAllTasks() {
         return ResponseEntity.ok().body(taskService.getAllTasks());
     }
 
@@ -37,22 +39,22 @@ public class TaskController implements TaskApi {
     }
 
     @Override
-    public ResponseEntity<Task> getTaskById(final Long id) {
+    public ResponseEntity<GetTaskResult> getTaskById(final Long id) {
         return ResponseEntity.ok(taskService.getTask(id));
     }
 
     @Override
-    public ResponseEntity<Task> createTask(final CreateTaskDto task) {
+    public ResponseEntity<TaskResponse> createTask(final CreateTaskDto task) {
         return ResponseEntity.ok(taskService.createTask(task));
     }
 
     @Override
-    public ResponseEntity<Task> updateTask(final Long id, final AllUpdateTaskDto task) {
-        return ResponseEntity.ok(taskService.allUpdateTask(id, task));
+    public ResponseEntity<TaskResponse> updateTask(final Long id, final UpdateAllTaskDto task) {
+        return ResponseEntity.ok(taskService.updateAllTask(id, task));
     }
 
     @Override
-    public ResponseEntity<Task> updateTask(final Long id,
+    public ResponseEntity<TaskResponse> updateTask(final Long id,
                                            final String title,
                                            final String description,
                                            final LocalDateTime dueDate,

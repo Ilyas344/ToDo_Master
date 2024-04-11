@@ -5,9 +5,12 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 
+
 @Builder
-public record CreateTaskDto(
+public record UpdateAllTaskDto(
+
         String title,
         String description,
-        LocalDateTime dueDate) {
+        LocalDateTime dueDate,
+        Boolean isCompleted) {
 }

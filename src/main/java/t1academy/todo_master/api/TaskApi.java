@@ -1,40 +1,211 @@
 package t1academy.todo_master.api;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import t1academy.todo_master.dto.input.AllUpdateTaskDto;
 import t1academy.todo_master.dto.input.CreateTaskDto;
+import t1academy.todo_master.dto.input.UpdateAllTaskDto;
+import t1academy.todo_master.dto.output.GetAllTaskResult;
+import t1academy.todo_master.dto.output.GetTaskResult;
+import t1academy.todo_master.dto.output.TaskResponse;
+import t1academy.todo_master.exception.InternalServerException;
+import t1academy.todo_master.exception.ResponseException;
+import t1academy.todo_master.exception.TaskNotFoundException;
 import t1academy.todo_master.model.Task;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Tag(name = "To-Do Master API", description = "Сервис для управления задачами")
 @RequestMapping("/api/v1")
 public interface TaskApi {
 
+    @Operation(summary = "Получить все задачи (Get all tasks)",
+            description = "Получает все задачи из базы данных (Retrieves all tasks from the database).")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешное выполнение",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = GetAllTaskResult.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "В случае нарушения контракта",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ResponseException.class))),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "В случае внутренних ошибок",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = InternalServerException.class))
+            )
+    })
     @GetMapping("/tasks/all")
-    ResponseEntity<List<Task>> getAllTasks();
+    ResponseEntity<GetAllTaskResult> getAllTasks();
 
+
+    @Operation(summary = "Получить все задачи с пагинацией (Get all tasks with pagination)",
+            description = "Получает все задачи из базы данных с применением пагинации (Retrieves all tasks from the database with pagination).")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешное выполнение",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Task.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "В случае нарушения контракта",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ResponseException.class))),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "В случае внутренних ошибок",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = InternalServerException.class))
+            )
+    })
     @GetMapping("/tasks")
     ResponseEntity<Page<Task>> getAllTasks(@RequestParam(defaultValue = "10") int pageSize,
                                            @RequestParam(defaultValue = "0") int pageNumber);
 
+
+    @Operation(summary = "Получить задачу по ID (Get task by ID)", description = "Получает задачу из базы данных по ее ID (Retrieves a task from the database by its ID).")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешное выполнение",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = GetTaskResult.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "В случае нарушения контракта",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ResponseException.class))),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Не найден",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = TaskNotFoundException.class))),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "В случае внутренних ошибок",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = InternalServerException.class))
+            )
+    })
     @GetMapping("/tasks/{id}")
-    ResponseEntity<Task> getTaskById(@PathVariable Long id);
+    ResponseEntity<GetTaskResult> getTaskById(@PathVariable Long id);
 
+
+    @Operation(summary = "Создать задачу (Create task)",
+            description = "Создает новую задачу на основе данных, переданных в теле запроса (Creates a new task based on the data provided in the request body).")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешное выполнение",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = TaskResponse.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "В случае нарушения контракта",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ResponseException.class))),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "В случае внутренних ошибок",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = InternalServerException.class))
+            )
+    })
     @PostMapping("/tasks")
-    ResponseEntity<Task> createTask(@Valid @RequestBody CreateTaskDto task);
+    ResponseEntity<TaskResponse> createTask(@Valid @RequestBody CreateTaskDto task);
 
+
+    @Operation(summary = "Обновить задачу (Update task)",
+            description = "Обновляет все поля задачи с ID, указанным в пути (Updates all fields of the task with the specified ID).")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешное выполнение",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = TaskResponse.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "В случае нарушения контракта",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ResponseException.class))),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Не найден",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = TaskNotFoundException.class))),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "В случае внутренних ошибок",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = InternalServerException.class))
+            )
+    })
     @PutMapping("/tasks/{id}")
-    ResponseEntity<Task> updateTask(@PathVariable Long id, @Valid @RequestBody AllUpdateTaskDto task);
+    ResponseEntity<TaskResponse> updateTask(@PathVariable Long id, @Valid @RequestBody UpdateAllTaskDto task);
 
+
+    @Operation(summary = "Обновить задачу (Update task)",
+            description = "Обновляет некоторые поля задачи с ID, указанным в пути (Updates some fields of the task with the specified ID).")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Успешное выполнение",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = TaskResponse.class))),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "В случае нарушения контракта",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ResponseException.class))),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Не найден",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = TaskNotFoundException.class))),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "В случае внутренних ошибок",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = InternalServerException.class))
+            )
+    })
     @PatchMapping("/tasks/{id}")
-    ResponseEntity<Task> updateTask(@PathVariable
+    ResponseEntity<TaskResponse> updateTask(@PathVariable
                                     @Parameter(description = "ID задачи") Long id,
 
                                     @RequestParam(required = false)
@@ -49,8 +220,14 @@ public interface TaskApi {
 
                                     @RequestParam(required = false)
                                     @Parameter(description = "Флаг, указывающий, выполнена ли задача")
-                                    Boolean completed);
+                                            Boolean isCompleted);
 
+
+    @Operation(summary = "Удалить задачу по id (Delete task by id)",
+            description = "Удаляет задачу из базы данных по ее ID (Deletes a task from the database by its ID).",
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "No content")
+            })
     @DeleteMapping("/tasks/{id}")
     ResponseEntity<Void> deleteTask(@PathVariable Long id);
 

@@ -2,21 +2,25 @@ package t1academy.todo_master.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import t1academy.todo_master.dto.input.AllUpdateTaskDto;
 import t1academy.todo_master.dto.input.CreateTaskDto;
+import t1academy.todo_master.dto.input.UpdateAllTaskDto;
 import t1academy.todo_master.dto.input.UpdateTaskDto;
+import t1academy.todo_master.dto.output.GetAllTaskResult;
+import t1academy.todo_master.dto.output.GetTaskResult;
+import t1academy.todo_master.dto.output.TaskResponse;
 import t1academy.todo_master.model.Task;
-
-import java.util.List;
 
 public interface TaskService {
 
-    Task createTask(CreateTaskDto task);
-    Task getTask(Long taskId);
+    TaskResponse createTask(CreateTaskDto task);
 
-    Task updateTask(Long id, UpdateTaskDto task);
-    Task allUpdateTask(Long id, AllUpdateTaskDto task);
+    GetTaskResult getTask(Long taskId);
+
+    TaskResponse updateTask(Long id, UpdateTaskDto task);
+
+    TaskResponse updateAllTask(Long id, UpdateAllTaskDto task);
     void deleteTask(Long taskId);
-    List<Task> getAllTasks();
+
+    GetAllTaskResult getAllTasks();
     Page<Task> getAllTasks(Pageable pageable);
 }
