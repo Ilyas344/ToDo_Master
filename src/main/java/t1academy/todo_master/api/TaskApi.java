@@ -51,7 +51,7 @@ public interface TaskApi {
                             schema = @Schema(implementation = InternalServerException.class))
             )
     })
-    @GetMapping("/tasks/all")
+    @GetMapping("/tasks/")
     ResponseEntity<GetAllTaskResult> getAllTasks();
 
 
@@ -78,7 +78,7 @@ public interface TaskApi {
                             schema = @Schema(implementation = InternalServerException.class))
             )
     })
-    @GetMapping("/tasks")
+    @GetMapping("/tasks/page")
     ResponseEntity<Page<Task>> getAllTasks(@RequestParam(defaultValue = "10") int pageSize,
                                            @RequestParam(defaultValue = "0") int pageNumber);
 
