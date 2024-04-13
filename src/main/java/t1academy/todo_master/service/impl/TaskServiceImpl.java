@@ -3,8 +3,6 @@ package t1academy.todo_master.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import t1academy.todo_master.dto.input.CreateTaskDto;
 import t1academy.todo_master.dto.input.UpdateAllTaskDto;
@@ -62,10 +60,6 @@ public class TaskServiceImpl implements TaskService {
         return new GetAllTaskResponse(taskRepository.findAll());
     }
 
-    @Override
-    public Page<Task> getAllTasks(Pageable pageable) {
-        return taskRepository.findAll(pageable);
-    }
 
     @Override
     public Task getTaskById(Long taskId) {

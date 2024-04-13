@@ -1,10 +1,6 @@
 package t1academy.todo_master.api.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import t1academy.todo_master.api.TaskApi;
@@ -14,7 +10,6 @@ import t1academy.todo_master.dto.input.UpdateTaskDto;
 import t1academy.todo_master.dto.output.GetAllTaskResponse;
 import t1academy.todo_master.dto.output.GetTaskResponse;
 import t1academy.todo_master.dto.output.TaskResponse;
-import t1academy.todo_master.model.Task;
 import t1academy.todo_master.service.TaskService;
 
 import java.time.LocalDateTime;
@@ -27,15 +22,6 @@ public class TaskController implements TaskApi {
     @Override
     public ResponseEntity<GetAllTaskResponse> getAllTasks() {
         return ResponseEntity.ok().body(taskService.getAllTasks());
-    }
-
-    @Override
-    public ResponseEntity<Page<Task>> getAllTasks(int pageSize,
-                                                  int pageNumber) {
-        Sort sort = Sort.by("id").descending();
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        Page<Task> tasks = taskService.getAllTasks(pageable);
-        return ResponseEntity.ok(tasks);
     }
 
     @Override

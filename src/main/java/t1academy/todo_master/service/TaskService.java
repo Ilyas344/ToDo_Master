@@ -1,7 +1,5 @@
 package t1academy.todo_master.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import t1academy.todo_master.dto.input.CreateTaskDto;
 import t1academy.todo_master.dto.input.UpdateAllTaskDto;
 import t1academy.todo_master.dto.input.UpdateTaskDto;
@@ -61,16 +59,6 @@ public interface TaskService {
      */
 
     GetAllTaskResponse getAllTasks();
-
-    /**
-     * Получает список всех задач с пагинацией
-     * (defaultValue = "10") int pageSize,
-     * (defaultValue = "0") int pageNumber
-     *  Sort sort = Sort.by("id").descending();
-     * @param pageable = PageRequest.of(pageNumber, pageSize, sort);
-     * @return Page<Task> список task
-     */
-    Page<Task> getAllTasks(Pageable pageable);
 
     /**
      * Получить задачу по id

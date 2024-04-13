@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +19,6 @@ import t1academy.todo_master.dto.output.TaskResponse;
 import t1academy.todo_master.exception.InternalServerException;
 import t1academy.todo_master.exception.ResponseException;
 import t1academy.todo_master.exception.TaskNotFoundException;
-import t1academy.todo_master.model.Task;
 
 import java.time.LocalDateTime;
 
@@ -53,34 +51,6 @@ public interface TaskApi {
     })
     @GetMapping("/tasks/")
     ResponseEntity<GetAllTaskResponse> getAllTasks();
-
-
-    @Operation(summary = "Получить все задачи с пагинацией (Get all tasks with pagination)",
-            description = "Получает все задачи из базы данных с применением пагинации (Retrieves all tasks from the database with pagination).")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Успешное выполнение",
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = Task.class))),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "В случае нарушения контракта",
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ResponseException.class))),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "В случае внутренних ошибок",
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = InternalServerException.class))
-            )
-    })
-    @GetMapping("/tasks/page")
-    ResponseEntity<Page<Task>> getAllTasks(@RequestParam(defaultValue = "10") int pageSize,
-                                           @RequestParam(defaultValue = "0") int pageNumber);
 
 
     @Operation(summary = "Получить задачу по ID (Get task by ID)", description = "Получает задачу из базы данных по ее ID (Retrieves a task from the database by its ID).")
