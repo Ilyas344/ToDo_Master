@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 @Validated
-public class GetAllTaskResult {
+public class GetAllTaskResponse {
     @Schema(description = "Список задач")
     private List<TaskResponse> tasks;
 
@@ -18,7 +18,7 @@ public class GetAllTaskResult {
     @Positive
     private int count;
 
-    public GetAllTaskResult(List<Task> tasks) {
+    public GetAllTaskResponse(List<Task> tasks) {
         this.tasks = tasks.stream().map(TaskResponse::new).toList();
         this.count = this.tasks.size();
     }

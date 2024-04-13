@@ -39,5 +39,4 @@ public class Task {
      */
     private Boolean isCompleted;
 
-
 }

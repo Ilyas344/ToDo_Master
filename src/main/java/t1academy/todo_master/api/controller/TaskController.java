@@ -11,8 +11,8 @@ import t1academy.todo_master.api.TaskApi;
 import t1academy.todo_master.dto.input.CreateTaskDto;
 import t1academy.todo_master.dto.input.UpdateAllTaskDto;
 import t1academy.todo_master.dto.input.UpdateTaskDto;
-import t1academy.todo_master.dto.output.GetAllTaskResult;
-import t1academy.todo_master.dto.output.GetTaskResult;
+import t1academy.todo_master.dto.output.GetAllTaskResponse;
+import t1academy.todo_master.dto.output.GetTaskResponse;
 import t1academy.todo_master.dto.output.TaskResponse;
 import t1academy.todo_master.model.Task;
 import t1academy.todo_master.service.TaskService;
@@ -25,7 +25,7 @@ public class TaskController implements TaskApi {
     private final TaskService taskService;
 
     @Override
-    public ResponseEntity<GetAllTaskResult> getAllTasks() {
+    public ResponseEntity<GetAllTaskResponse> getAllTasks() {
         return ResponseEntity.ok().body(taskService.getAllTasks());
     }
 
@@ -39,7 +39,7 @@ public class TaskController implements TaskApi {
     }
 
     @Override
-    public ResponseEntity<GetTaskResult> getTaskById(final Long id) {
+    public ResponseEntity<GetTaskResponse> getTaskById(final Long id) {
         return ResponseEntity.ok(taskService.getTask(id));
     }
 

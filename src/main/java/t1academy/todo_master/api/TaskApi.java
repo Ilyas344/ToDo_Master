@@ -14,8 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import t1academy.todo_master.dto.input.CreateTaskDto;
 import t1academy.todo_master.dto.input.UpdateAllTaskDto;
-import t1academy.todo_master.dto.output.GetAllTaskResult;
-import t1academy.todo_master.dto.output.GetTaskResult;
+import t1academy.todo_master.dto.output.GetAllTaskResponse;
+import t1academy.todo_master.dto.output.GetTaskResponse;
 import t1academy.todo_master.dto.output.TaskResponse;
 import t1academy.todo_master.exception.InternalServerException;
 import t1academy.todo_master.exception.ResponseException;
@@ -36,7 +36,7 @@ public interface TaskApi {
                     description = "Успешное выполнение",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = GetAllTaskResult.class))),
+                            schema = @Schema(implementation = GetAllTaskResponse.class))),
             @ApiResponse(
                     responseCode = "400",
                     description = "В случае нарушения контракта",
@@ -52,7 +52,7 @@ public interface TaskApi {
             )
     })
     @GetMapping("/tasks/")
-    ResponseEntity<GetAllTaskResult> getAllTasks();
+    ResponseEntity<GetAllTaskResponse> getAllTasks();
 
 
     @Operation(summary = "Получить все задачи с пагинацией (Get all tasks with pagination)",
@@ -90,7 +90,7 @@ public interface TaskApi {
                     description = "Успешное выполнение",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = GetTaskResult.class))),
+                            schema = @Schema(implementation = GetTaskResponse.class))),
             @ApiResponse(
                     responseCode = "400",
                     description = "В случае нарушения контракта",
@@ -112,7 +112,7 @@ public interface TaskApi {
             )
     })
     @GetMapping("/tasks/{id}")
-    ResponseEntity<GetTaskResult> getTaskById(@PathVariable Long id);
+    ResponseEntity<GetTaskResponse> getTaskById(@PathVariable Long id);
 
 
     @Operation(summary = "Создать задачу (Create task)",

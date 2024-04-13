@@ -5,11 +5,11 @@ import lombok.Data;
 import t1academy.todo_master.model.Task;
 
 @Data
-public class GetTaskResult {
+public class GetTaskResponse {
     @Schema(description = "Задача")
     private TaskResponse task;
 
-    public GetTaskResult(Task task) {
+    public GetTaskResponse(Task task) {
         this.task = new TaskResponse(task);
     }
 }

@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import t1academy.todo_master.dto.input.CreateTaskDto;
 import t1academy.todo_master.dto.input.UpdateAllTaskDto;
 import t1academy.todo_master.dto.input.UpdateTaskDto;
-import t1academy.todo_master.dto.output.GetAllTaskResult;
-import t1academy.todo_master.dto.output.GetTaskResult;
+import t1academy.todo_master.dto.output.GetAllTaskResponse;
+import t1academy.todo_master.dto.output.GetTaskResponse;
 import t1academy.todo_master.dto.output.TaskResponse;
 import t1academy.todo_master.exception.TaskNotFoundException;
 import t1academy.todo_master.mapper.TaskMapper;
@@ -33,8 +33,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public GetTaskResult getTask(Long taskId) {
-        return new GetTaskResult(getTaskById(taskId));
+    public GetTaskResponse getTask(Long taskId) {
+        return new GetTaskResponse(getTaskById(taskId));
     }
 
     @Override
@@ -58,8 +58,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public GetAllTaskResult getAllTasks() {
-        return new GetAllTaskResult(taskRepository.findAll());
+    public GetAllTaskResponse getAllTasks() {
+        return new GetAllTaskResponse(taskRepository.findAll());
     }
 
     @Override
@@ -67,7 +67,8 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.findAll(pageable);
     }
 
-    private Task getTaskById(Long taskId) {
+    @Override
+    public Task getTaskById(Long taskId) {
         return taskRepository.findById(taskId).orElseThrow(() ->
                 new TaskNotFoundException("Task not found with id: " + taskId));
     }
