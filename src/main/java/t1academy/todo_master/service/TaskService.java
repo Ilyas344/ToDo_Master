@@ -2,9 +2,7 @@ package t1academy.todo_master.service;
 
 import t1academy.todo_master.dto.input.CreateTaskDto;
 import t1academy.todo_master.dto.input.UpdateAllTaskDto;
-import t1academy.todo_master.dto.input.UpdateTaskDto;
 import t1academy.todo_master.dto.output.GetAllTaskResponse;
-import t1academy.todo_master.dto.output.GetTaskResponse;
 import t1academy.todo_master.dto.output.TaskResponse;
 import t1academy.todo_master.model.Task;
 
@@ -22,18 +20,10 @@ public interface TaskService {
      * Получает задачу по ее идентификатору.
      *
      *  @param taskId Идентификатор задачи (required)
-     *  @return GetTaskResult объект, содержащий информацию о найденной задаче
+     *  @return GetTaskResponse объект, содержащий информацию о найденной задаче
      */
-    GetTaskResponse getTask(Long taskId);
+    TaskResponse getTask(Long taskId);
 
-    /**
-     * Частично обновляет задачу по ее идентификатору.
-     *
-     * @param id Идентификатор задачи (required)
-     * @param task DTO-объект, содержащий данные для обновления задачи (required)
-     * @return TaskResponse объект, содержащий информацию об обновленной задаче
-     */
-    TaskResponse updateTask(Long id, UpdateTaskDto task);
 
     /**
      * Полностью обновляет задачу по ее идентификатору.

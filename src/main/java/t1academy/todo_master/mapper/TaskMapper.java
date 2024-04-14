@@ -2,7 +2,7 @@ package t1academy.todo_master.mapper;
 
 import org.mapstruct.*;
 import t1academy.todo_master.dto.input.CreateTaskDto;
-import t1academy.todo_master.dto.input.UpdateTaskDto;
+import t1academy.todo_master.dto.input.UpdateAllTaskDto;
 import t1academy.todo_master.model.Task;
 
 import java.time.LocalDateTime;
@@ -15,11 +15,8 @@ public interface TaskMapper {
     @Mapping(target = "isCompleted", source = "dueDate", qualifiedByName = "getIssCompleted")
     Task toEntity(CreateTaskDto createTaskDto);
 
-    CreateTaskDto toDto(Task task);
-
-
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    Task partialUpdate(UpdateTaskDto createTaskDto, @MappingTarget Task task);
+    Task partialUpdate(UpdateAllTaskDto createTaskDto, @MappingTarget Task task);
 
     @Named("getIssCompleted")
     default Boolean getIssCompleted(LocalDateTime dueDate) {

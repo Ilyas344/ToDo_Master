@@ -2,13 +2,10 @@ package t1academy.todo_master.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import t1academy.todo_master.dto.input.CreateTaskDto;
 import t1academy.todo_master.dto.input.UpdateAllTaskDto;
-import t1academy.todo_master.dto.input.UpdateTaskDto;
 import t1academy.todo_master.dto.output.GetAllTaskResponse;
-import t1academy.todo_master.dto.output.GetTaskResponse;
 import t1academy.todo_master.dto.output.TaskResponse;
 import t1academy.todo_master.exception.TaskNotFoundException;
 import t1academy.todo_master.mapper.TaskMapper;
@@ -31,21 +28,21 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public GetTaskResponse getTask(Long taskId) {
-        return new GetTaskResponse(getTaskById(taskId));
+    public TaskResponse getTask(Long taskId) {
+        return new TaskResponse(getTaskById(taskId));
     }
 
     @Override
-    public TaskResponse updateTask(Long id, UpdateTaskDto task) {
-        Task oldTask = getTaskById(id);
-        taskMapper.partialUpdate(task, oldTask);
-        return new TaskResponse(taskRepository.save(oldTask));
+    public Task getTaskById(Long taskId) {
+        return taskRepository.findById(taskId).orElseThrow(() ->
+                new TaskNotFoundException("Task not found with id: " + taskId));
     }
+
 
     @Override
     public TaskResponse updateAllTask(Long id, UpdateAllTaskDto task) {
         Task oldTask = getTaskById(id);
-        BeanUtils.copyProperties(task, oldTask);
+        taskMapper.partialUpdate(task, oldTask);
         return new TaskResponse(taskRepository.save(oldTask));
     }
 
@@ -61,9 +58,4 @@ public class TaskServiceImpl implements TaskService {
     }
 
 
-    @Override
-    public Task getTaskById(Long taskId) {
-        return taskRepository.findById(taskId).orElseThrow(() ->
-                new TaskNotFoundException("Task not found with id: " + taskId));
-    }
 }

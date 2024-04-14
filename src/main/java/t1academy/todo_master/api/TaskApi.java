@@ -1,7 +1,6 @@
 package t1academy.todo_master.api;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,16 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import t1academy.todo_master.dto.input.CreateTaskDto;
 import t1academy.todo_master.dto.input.UpdateAllTaskDto;
 import t1academy.todo_master.dto.output.GetAllTaskResponse;
-import t1academy.todo_master.dto.output.GetTaskResponse;
 import t1academy.todo_master.dto.output.TaskResponse;
 import t1academy.todo_master.exception.InternalServerException;
 import t1academy.todo_master.exception.ResponseException;
 import t1academy.todo_master.exception.TaskNotFoundException;
 
-import java.time.LocalDateTime;
-
 @Tag(name = "To-Do Master API", description = "Сервис для управления задачами")
-@RequestMapping("/api/v1")
 public interface TaskApi {
 
     @Operation(summary = "Получить все задачи (Get all tasks)",
@@ -36,12 +31,6 @@ public interface TaskApi {
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = GetAllTaskResponse.class))),
             @ApiResponse(
-                    responseCode = "400",
-                    description = "В случае нарушения контракта",
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ResponseException.class))),
-            @ApiResponse(
                     responseCode = "500",
                     description = "В случае внутренних ошибок",
                     content = @Content(
@@ -49,7 +38,7 @@ public interface TaskApi {
                             schema = @Schema(implementation = InternalServerException.class))
             )
     })
-    @GetMapping("/tasks/")
+    @GetMapping("/tasks")
     ResponseEntity<GetAllTaskResponse> getAllTasks();
 
 
@@ -60,7 +49,7 @@ public interface TaskApi {
                     description = "Успешное выполнение",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = GetTaskResponse.class))),
+                            schema = @Schema(implementation = TaskResponse.class))),
             @ApiResponse(
                     responseCode = "400",
                     description = "В случае нарушения контракта",
@@ -82,14 +71,14 @@ public interface TaskApi {
             )
     })
     @GetMapping("/tasks/{id}")
-    ResponseEntity<GetTaskResponse> getTaskById(@PathVariable Long id);
+    ResponseEntity<TaskResponse> getTaskById(@PathVariable Long id);
 
 
     @Operation(summary = "Создать задачу (Create task)",
             description = "Создает новую задачу на основе данных, переданных в теле запроса (Creates a new task based on the data provided in the request body).")
     @ApiResponses(value = {
             @ApiResponse(
-                    responseCode = "200",
+                    responseCode = "201",
                     description = "Успешное выполнение",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -143,54 +132,6 @@ public interface TaskApi {
     })
     @PutMapping("/tasks/{id}")
     ResponseEntity<TaskResponse> updateTask(@PathVariable Long id, @Valid @RequestBody UpdateAllTaskDto task);
-
-
-    @Operation(summary = "Обновить задачу (Update task)",
-            description = "Обновляет некоторые поля задачи с ID, указанным в пути (Updates some fields of the task with the specified ID).")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Успешное выполнение",
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = TaskResponse.class))),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "В случае нарушения контракта",
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ResponseException.class))),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Не найден",
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = TaskNotFoundException.class))),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "В случае внутренних ошибок",
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = InternalServerException.class))
-            )
-    })
-    @PatchMapping("/tasks/{id}")
-    ResponseEntity<TaskResponse> updateTask(@PathVariable
-                                    @Parameter(description = "ID задачи") Long id,
-
-                                    @RequestParam(required = false)
-                                    @Parameter(description = "Название задачи") String title,
-
-                                    @RequestParam(required = false)
-                                    @Parameter(description = "Подробное описание задачи") String description,
-
-                                    @RequestParam(required = false)
-                                    @Parameter(description = "Дата и время, к которым задача должна быть выполнена")
-                                    LocalDateTime dueDate,
-
-                                    @RequestParam(required = false)
-                                    @Parameter(description = "Флаг, указывающий, выполнена ли задача")
-                                            Boolean isCompleted);
 
 
     @Operation(summary = "Удалить задачу по id (Delete task by id)",

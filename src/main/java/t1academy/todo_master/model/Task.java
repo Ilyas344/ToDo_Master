@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "tasks")
+@Table(name = "t_tasks")
 public class Task {
     /**
      * Идентификатор задачи.
@@ -39,4 +39,11 @@ public class Task {
      */
     private Boolean isCompleted;
 
+    public Task(Long id, String title, String description, LocalDateTime dueDate) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.dueDate = dueDate;
+        this.isCompleted = dueDate.isBefore(LocalDateTime.now());
+    }
 }
