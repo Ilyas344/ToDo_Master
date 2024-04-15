@@ -1,5 +1,6 @@
 package t1academy.todo_master.service.impl;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,6 +26,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("TaskService тесты")
 public class TaskServiceTest {
 
     @Mock
@@ -35,11 +37,13 @@ public class TaskServiceTest {
 
     @InjectMocks
     private TaskServiceImpl taskService;
+
     LocalDateTime expectedDueDate = LocalDateTime.parse("2024-04-20T18:47:13");
     private final Task actualTask = new Task(1L, "Название Task 1", "Описание Task 1", expectedDueDate.plusDays(7), false);
 
 
     @Test
+    @DisplayName("Тест на успешное создание задачи")
     public void testCreateTask_success() {
 
         var expectedTask = actualTask;
@@ -58,12 +62,15 @@ public class TaskServiceTest {
         assertEquals(expectedTask.getId(), response.getId());
         assertEquals(expectedTask.getTitle(), response.getTitle());
         assertEquals(expectedTask.getDescription(), response.getDescription());
+
         verify(taskMapper).toEntity(taskDto);
         verify(taskRepository).save(expectedTask);
+        verifyNoMoreInteractions(taskRepository);
     }
 
 
     @Test
+    @DisplayName("Тест на успешное получение задачи")
     public void testGetTask_success() {
         var expectedTask = actualTask;
         when(taskRepository.findById(1L)).thenReturn(Optional.of(expectedTask));
@@ -75,21 +82,23 @@ public class TaskServiceTest {
         assertEquals(expectedTask.getDescription(), response.getDescription());
 
         verify(taskRepository).findById(1L);
+        verifyNoMoreInteractions(taskRepository);
     }
 
 
     @Test
+    @DisplayName("Тест на получение несуществующей задачи")
     public void testGetTask_taskNotFound() {
 
-        Exception exception = assertThrows(TaskNotFoundException.class, () -> {
-            taskService.getTaskById(1L);
-        });
+        Exception exception = assertThrows(TaskNotFoundException.class,
+                () -> taskService.getTaskById(1L));
 
         assertEquals("Task not found with id: 1", exception.getMessage());
         verify(taskRepository).findById(1L);
     }
 
     @Test
+    @DisplayName("Тест на успешное обновление всех полей задачи")
     public void testUpdateAllTask_success() {
 
         var oldTask = actualTask;
@@ -111,32 +120,37 @@ public class TaskServiceTest {
         assertEquals(expectedTask.getId(), response.getId());
         assertEquals(expectedTask.getTitle(), response.getTitle());
         assertEquals(expectedTask.getDescription(), response.getDescription());
-        verify(taskRepository).findById(1L);
 
+        verify(taskRepository).findById(1L);
         verify(taskRepository).save(oldTask);
+        verifyNoMoreInteractions(taskRepository);
     }
 
     @Test
+    @DisplayName("Тест на обновление несуществующей задачи")
     public void testUpdateAllTask_taskNotFound() {
         var updateDto = mock(UpdateAllTaskDto.class);
 
-        Exception exception = assertThrows(TaskNotFoundException.class, () -> {
-            taskService.updateAllTask(1L, updateDto);
-        });
+        Exception exception = assertThrows(TaskNotFoundException.class,
+                () -> taskService.updateAllTask(1L, updateDto));
         assertEquals("Task not found with id: 1", exception.getMessage());
+
         verify(taskRepository).findById(1L);
         verifyNoMoreInteractions(taskRepository);
 
     }
 
     @Test
+    @DisplayName("Тест на успешное удаление задачи")
     public void testDeleteTask_success() {
         taskService.deleteTask(1L);
         verify(taskRepository).deleteById(1L);
+        verifyNoMoreInteractions(taskRepository);
     }
 
 
     @Test
+    @DisplayName("Тест на получение всех задач")
     public void testGetAllTasks_success() {
 
         List<Task> tasks = Arrays.asList(actualTask, actualTask);
@@ -152,7 +166,9 @@ public class TaskServiceTest {
         assertEquals("Описание Task 1", response.getTasks().get(0).getDescription());
         assertEquals(expectedDueDate.plusDays(7), response.getTasks().get(0).getDueDate());
         assertEquals(false, response.getTasks().get(0).getIsCompleted());
+
         verify(taskRepository).findAll();
+        verifyNoMoreInteractions(taskRepository);
     }
 }
 

@@ -23,11 +23,9 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.*;
-
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -73,7 +71,7 @@ class TaskControllerTest {
     @Test
     @DisplayName("Проверка метода getAllTasks() при пустом листе задач")
     public void testGetAllTasks_EmptyList() throws Exception  {
-        // Мок поведения
+
         List<Task> expectedTasks = Collections.emptyList();
         var responseFromService = new GetAllTaskResponse(expectedTasks);
         when(taskService.getAllTasks()).thenReturn(responseFromService);
